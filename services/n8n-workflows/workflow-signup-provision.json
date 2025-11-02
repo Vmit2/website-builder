@@ -1,0 +1,138 @@
+{
+  "name": "Signup - Provision Trial",
+  "description": "Triggered on user signup: creates site record, provisions subdomain, schedules launch time, sends welcome email",
+  "nodes": [
+    {
+      "name": "Webhook - Signup",
+      "type": "n8n-nodes-base.webhook",
+      "position": [100, 200],
+      "parameters": {
+        "path": "webhook/signup",
+        "httpMethod": "POST",
+        "responseMode": "onReceived"
+      }
+    },
+    {
+      "name": "Extract User Data",
+      "type": "n8n-nodes-base.set",
+      "position": [300, 200],
+      "parameters": {
+        "values": {
+          "userId": "={{ $json.user_id }}",
+          "email": "={{ $json.email }}",
+          "username": "={{ $json.username }}",
+          "fullName": "={{ $json.full_name }}"
+        }
+      }
+    },
+    {
+      "name": "Create Site Record",
+      "type": "n8n-nodes-base.postgres",
+      "position": [500, 200],
+      "parameters": {
+        "operation": "insert",
+        "table": "sites",
+        "columns": "user_id,username,theme_slug,status,coming_soon,launch_time",
+        "values": "={{ $json.userId }},={{ $json.username }},minimal-creative,pending,true,{{ new Date(Date.now() + 24*60*60*1000).toISOString() }}"
+      }
+    },
+    {
+      "name": "Provision Subdomain",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [700, 200],
+      "parameters": {
+        "url": "https://api.cloudflare.com/client/v4/zones/{{ $env.CLOUDFLARE_ZONE_ID }}/dns_records",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ $env.CLOUDFLARE_TOKEN }}",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "type": "CNAME",
+          "name": "={{ $json.username }}",
+          "content": "{{ $env.VERCEL_ALIAS }}",
+          "ttl": 3600
+        }
+      }
+    },
+    {
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.resend",
+      "position": [900, 200],
+      "parameters": {
+        "from": "noreply@brand.com",
+        "to": "={{ $json.email }}",
+        "subject": "Welcome to Portfolio Builder - Your Free Trial Starts Now!",
+        "htmlBody": "<h1>Welcome {{ $json.fullName }}!</h1><p>Your portfolio site is live at: <a href='https://{{ $json.username }}.brand.com'>{{ $json.username }}.brand.com</a></p><p>Your free 24-hour trial has started. Customize your site and wait for admin approval to go fully live.</p>"
+      }
+    },
+    {
+      "name": "Log Audit Entry",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1100, 200],
+      "parameters": {
+        "operation": "insert",
+        "table": "audit_logs",
+        "columns": "user_id,action,resource_type,resource_id",
+        "values": "={{ $json.userId }},SIGNUP_COMPLETE,sites,{{ $json.siteId }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Signup": {
+      "main": [
+        [
+          {
+            "node": "Extract User Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract User Data": {
+      "main": [
+        [
+          {
+            "node": "Create Site Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Site Record": {
+      "main": [
+        [
+          {
+            "node": "Provision Subdomain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Provision Subdomain": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Log Audit Entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

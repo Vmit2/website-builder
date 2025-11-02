@@ -1,0 +1,438 @@
+{
+  "info": {
+    "name": "Portfolio Builder API",
+    "description": "Complete API collection for Portfolio Builder MVP",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"username\": \"alice\",\n  \"fullName\": \"Alice Smith\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/signup",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"securepassword\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Themes",
+      "item": [
+        {
+          "name": "Get All Themes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/themes",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "themes"]
+            }
+          }
+        },
+        {
+          "name": "Get Theme by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/themes/minimal-creative",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "themes", "minimal-creative"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "item": [
+        {
+          "name": "Get Image Library",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/images/library?themeId=1&category=hero",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "images", "library"],
+              "query": [
+                {
+                  "key": "themeId",
+                  "value": "1"
+                },
+                {
+                  "key": "category",
+                  "value": "hero"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Dashboard",
+      "item": [
+        {
+          "name": "Get Site Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/dashboard/site",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "dashboard", "site"]
+            }
+          }
+        },
+        {
+          "name": "Update Site Content",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"headline\": \"Updated Headline\",\n  \"bio\": \"Updated bio text\",\n  \"services\": [\"Design\", \"Development\"],\n  \"socialLinks\": [\n    {\n      \"platform\": \"Instagram\",\n      \"url\": \"https://instagram.com/alice\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/dashboard/site",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "dashboard", "site"]
+            }
+          }
+        },
+        {
+          "name": "Choose Theme",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"themeSlug\": \"bold-portfolio\",\n  \"paletteId\": \"vibrant-sunset\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/dashboard/theme",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "dashboard", "theme"]
+            }
+          }
+        },
+        {
+          "name": "Get Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/dashboard/analytics?period=7d",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "dashboard", "analytics"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "7d"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Initiate Upgrade",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"planSlug\": \"pro\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/dashboard/upgrade",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "dashboard", "upgrade"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Pending Sites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/sites?status=pending&limit=10&offset=0",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "admin", "sites"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Site Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/sites/{{SITE_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "admin", "sites", "{{SITE_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Approve Site",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"Looks great! Approved.\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/sites/{{SITE_ID}}/approve",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "admin", "sites", "{{SITE_ID}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Request Changes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"Please update the bio section with more details.\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/sites/{{SITE_ID}}/request-changes",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "admin", "sites", "{{SITE_ID}}", "request-changes"]
+            }
+          }
+        },
+        {
+          "name": "Reject Site",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Content does not meet community guidelines\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/sites/{{SITE_ID}}/reject",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "admin", "sites", "{{SITE_ID}}", "reject"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/users?role=user&limit=10&offset=0",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "user"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Send Broadcast Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Limited Time Offer: 50% Off Pro Plan\",\n  \"htmlBody\": \"<h1>Special Offer</h1><p>Get 50% off Pro plan this month only!</p>\",\n  \"targetRole\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/broadcast",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "admin", "broadcast"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "TOKEN",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ADMIN_TOKEN",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "SITE_ID",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
