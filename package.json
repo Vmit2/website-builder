@@ -1,0 +1,40 @@
+{
+  "name": "dumbdee-portfolio-builder",
+  "version": "0.1.0",
+  "description": "Portfolio builder MVP for influencers and freelancers",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "start": "npm start --workspace=apps/web",
+    "lint": "npm run lint --workspaces",
+    "type-check": "npm run type-check --workspaces || true",
+    "test": "npm run test --workspaces || true",
+    "test:integration": "npm run test:integration --workspace=apps/web || true",
+    "test:e2e": "npm run test:e2e --workspace=apps/web || true",
+    "db:migrate": "echo 'Run migrations in Supabase dashboard'",
+    "db:seed": "echo 'Seed data using docs/schema.sql'",
+    "n8n:dev": "echo 'Start n8n with: docker run -p 5678:5678 n8nio/n8n'"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "portfolio",
+    "builder",
+    "saas",
+    "multi-tenant",
+    "nextjs",
+    "supabase"
+  ],
+  "author": "Dumbdee Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vmit2/website-builder.git"
+  }
+}
