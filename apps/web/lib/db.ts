@@ -4,11 +4,34 @@ const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
+// Validate environment variables
+if (!supabaseUrl) {
+  console.error('⚠️  SUPABASE_URL is not set in environment variables');
+}
+
+if (!supabaseAnonKey) {
+  console.error('⚠️  SUPABASE_ANON_KEY is not set in environment variables');
+}
+
+if (!supabaseServiceKey) {
+  console.error('⚠️  SUPABASE_SERVICE_ROLE_KEY is not set in environment variables');
+}
+
+// Validate that all required vars are present before creating clients
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing required Supabase environment variables. Please set SUPABASE_URL and SUPABASE_ANON_KEY in your .env.local file.'
+  );
+}
+
 // Client for browser/client-side operations
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Client for server-side operations (with service role)
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+// Only create if service key is provided (some operations don't need it)
+export const supabaseAdmin = supabaseServiceKey
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : createClient(supabaseUrl, supabaseAnonKey); // Fallback to anon key if service key not provided
 
 // Database type definitions
 export interface User {
@@ -44,6 +67,7 @@ export interface Theme {
   description: string;
   demo_url: string;
   preview_image_url?: string;
+  coming_soon?: boolean;
   created_at: string;
 }
 
@@ -62,9 +86,31 @@ export interface Plan {
   name: string;
   description: string;
   price_cents: number;
+  price_yearly_cents?: number | null;
   interval: 'one_time' | 'monthly';
   features: string[];
+  highlighted?: boolean;
+  cta_label?: string;
   created_at: string;
+}
+
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  order_index: number;
+  created_at: string;
+}
+
+export interface UserContent {
+  id: string;
+  user_id: string;
+  site_id?: string | null;
+  theme_name: string;
+  content_json: Record<string, any>;
+  last_updated: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Subscription {
@@ -263,6 +309,37 @@ export async function approveSite(siteId: string): Promise<boolean> {
   } catch (error) {
     console.error('Unexpected error in approveSite:', error);
     return false;
+  }
+}
+
+/**
+ * Check if database is accessible (for startup validation)
+ */
+export async function checkDatabaseConnection(): Promise<{ connected: boolean; error?: string }> {
+  try {
+    // Try a simple query to check connection
+    const { error } = await supabase.from('users').select('count').limit(1);
+    
+    if (error) {
+      // Check if it's a table not found error
+      if (error.code === 'PGRST205' || error.message?.includes('relation') || error.message?.includes('does not exist')) {
+        return {
+          connected: true, // Connection works, but tables don't exist
+          error: 'Database tables not found. Please run the schema from docs/schema.sql in Supabase SQL Editor.',
+        };
+      }
+      return {
+        connected: false,
+        error: error.message || 'Database connection failed',
+      };
+    }
+    
+    return { connected: true };
+  } catch (error: any) {
+    return {
+      connected: false,
+      error: error.message || 'Failed to connect to database',
+    };
   }
 }
 

@@ -42,6 +42,38 @@ export function getTrialExpiryTime(): Date {
 }
 
 /**
+ * Check if we're in development mode (works on both client and server)
+ */
+function isDevelopment(): boolean {
+  // Client-side check
+  if (typeof window !== 'undefined') {
+    return window.location.hostname === 'localhost' || window.location.hostname.endsWith('.localhost');
+  }
+  // Server-side check
+  return process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_SITE_URL?.includes('at-solvexx.com');
+}
+
+/**
+ * Get site URL for a username (local development uses .localhost, production uses .at-solvexx.com)
+ */
+export function getSiteUrl(username: string): string {
+  if (isDevelopment()) {
+    return `http://${username}.localhost:3000`;
+  }
+  return `https://${username}.at-solvexx.com`;
+}
+
+/**
+ * Get site domain suffix (for display purposes)
+ */
+export function getSiteDomainSuffix(): string {
+  if (isDevelopment()) {
+    return '.localhost';
+  }
+  return '.at-solvexx.com';
+}
+
+/**
  * Format currency in INR
  */
 export function formatINR(cents: number): string {

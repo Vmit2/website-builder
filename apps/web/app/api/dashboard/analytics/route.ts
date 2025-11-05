@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getUserFromRequest } from '@/lib/auth';
 
 /**
  * GET /api/dashboard/analytics - Get visitor analytics
@@ -7,16 +8,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // TODO: Add authentication check
-    const userId = request.nextUrl.searchParams.get('userId');
-    const period = request.nextUrl.searchParams.get('period') || '7d';
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required.' },
-        { status: 400 }
-      );
+    // Require authentication
+    const user = await getUserFromRequest(request);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
+    const period = request.nextUrl.searchParams.get('period') || '7d';
 
     // TODO: Fetch real analytics from Plausible or Umami
     // For MVP, return mock data

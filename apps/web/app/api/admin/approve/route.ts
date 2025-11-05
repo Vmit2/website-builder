@@ -1,22 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/db';
 import { createAuditLog } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth';
+import { sendApprovalEmail } from '@/lib/email';
+import { getSiteUrl } from '@/lib/utils';
 
 /**
  * Admin approval endpoint
  * POST /api/admin/approve
- * Body: { siteId: string, adminId: string, comment?: string }
+ * Body: { siteId: string, comment?: string }
  */
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check
-    // const adminId = request.headers.get('x-admin-id');
-    // if (!adminId) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    // Require admin authentication
+    const admin = await requireAdmin(request);
 
     const body = await request.json();
-    const { siteId, adminId, comment } = body;
+    const { siteId, comment } = body;
+    const adminId = admin.id;
 
     if (!siteId || !adminId) {
       return NextResponse.json(
@@ -25,10 +26,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get site details
+    // Get site details with user info
     const { data: site, error: siteError } = await supabaseAdmin
       .from('sites')
-      .select('*')
+      .select('*, users(email, full_name)')
       .eq('id', siteId)
       .single();
 
@@ -39,12 +40,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update site status
+    // Update site status - clear expires_at when approved (permanent)
     const { error: updateError } = await supabaseAdmin
       .from('sites')
       .update({
         status: 'approved',
         coming_soon: false,
+        expires_at: null, // Clear expiry for approved sites
         updated_at: new Date().toISOString(),
       })
       .eq('id', siteId);
@@ -66,8 +68,15 @@ export async function POST(request: NextRequest) {
       { comment }
     );
 
-    // TODO: Send approval email to user via Resend
-    // TODO: Trigger n8n workflow for optional static export
+    // Send approval email to user
+    if (site.users?.email) {
+      const siteUrl = getSiteUrl(site.username);
+      await sendApprovalEmail(
+        site.users.email,
+        site.users.full_name || site.username,
+        siteUrl
+      );
+    }
 
     return NextResponse.json(
       {

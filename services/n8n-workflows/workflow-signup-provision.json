@@ -60,10 +60,10 @@
       "type": "n8n-nodes-base.resend",
       "position": [900, 200],
       "parameters": {
-        "from": "noreply@brand.com",
+        "from": "noreply@at-solvexx.com",
         "to": "={{ $json.email }}",
-        "subject": "Welcome to Portfolio Builder - Your Free Trial Starts Now!",
-        "htmlBody": "<h1>Welcome {{ $json.fullName }}!</h1><p>Your portfolio site is live at: <a href='https://{{ $json.username }}.brand.com'>{{ $json.username }}.brand.com</a></p><p>Your free 24-hour trial has started. Customize your site and wait for admin approval to go fully live.</p>"
+        "subject": "Welcome to At-Solvexx - Your Free Trial Starts Now!",
+        "htmlBody": "<h1>Welcome {{ $json.fullName }}!</h1><p>Your portfolio site is live at: <a href='https://{{ $json.username }}.at-solvexx.com'>{{ $json.username }}.at-solvexx.com</a></p><p>Your free 24-hour trial has started. Customize your site and wait for admin approval to go fully live.</p>"
       }
     },
     {

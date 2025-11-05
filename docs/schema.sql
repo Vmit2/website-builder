@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS sites (
   status varchar DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'expired')),
   coming_soon boolean DEFAULT true,
   launch_time timestamptz,
+  expires_at timestamptz, -- 24-hour trial expiry timestamp
   content jsonb DEFAULT '{}',
   images jsonb DEFAULT '[]',
   created_at timestamptz DEFAULT now(),
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS themes (
   description text,
   demo_url varchar,
   preview_image_url varchar,
+  coming_soon boolean DEFAULT false,
   created_at timestamptz DEFAULT now()
 );
 
@@ -88,6 +90,18 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   created_at timestamptz DEFAULT now()
 );
 
+-- Inactive Users table (for trial expiry retention - 6 months)
+CREATE TABLE IF NOT EXISTS inactive_users (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  username varchar NOT NULL,
+  email varchar NOT NULL,
+  user_id uuid REFERENCES users(id) ON DELETE SET NULL,
+  trial_expired_at timestamptz NOT NULL,
+  data_json jsonb DEFAULT '{}', -- Store site content, theme, etc. for retargeting
+  retention_until timestamptz NOT NULL, -- 6 months from expiry
+  created_at timestamptz DEFAULT now()
+);
+
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_sites_user_id ON sites(user_id);
 CREATE INDEX IF NOT EXISTS idx_sites_username ON sites(username);
@@ -99,6 +113,11 @@ CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id ON audit_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at);
 CREATE INDEX IF NOT EXISTS idx_image_library_theme_id ON image_library(theme_id);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_sites_expires_at ON sites(expires_at);
+
+-- Create indexes for inactive_users
+CREATE INDEX IF NOT EXISTS idx_inactive_users_retention_until ON inactive_users(retention_until);
+CREATE INDEX IF NOT EXISTS idx_inactive_users_username ON inactive_users(username);
 
 -- Insert default themes
 INSERT INTO themes (slug, name, description, demo_url) VALUES

@@ -1,5 +1,5 @@
 {
-  "name": "dumbdee-portfolio-builder",
+  "name": "solvexx-portfolio-builder",
   "version": "0.1.0",
   "description": "Portfolio builder MVP for influencers and freelancers",
   "private": true,
@@ -31,10 +31,13 @@
     "nextjs",
     "supabase"
   ],
-  "author": "Dumbdee Team",
+  "author": "Aariyatech Team",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Vmit2/website-builder.git"
+  },
+  "dependencies": {
+    "react-contenteditable": "^3.3.7"
   }
 }

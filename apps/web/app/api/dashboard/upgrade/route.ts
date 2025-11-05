@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/db';
+import { supabaseAdmin } from '@/lib/db';
+import { getUserFromRequest } from '@/lib/auth';
+import { createRazorpayOrder, createRazorpaySubscription } from '@/lib/razorpay';
 
 /**
  * POST /api/dashboard/upgrade - Initiate plan upgrade
@@ -8,14 +10,10 @@ import { supabase } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add authentication check
-    const userId = request.nextUrl.searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required.' },
-        { status: 400 }
-      );
+    // Require authentication
+    const user = await getUserFromRequest(request);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -29,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get plan details
-    const { data: plan, error: planError } = await supabase
+    const { data: plan, error: planError } = await supabaseAdmin
       .from('plans')
       .select('*')
       .eq('slug', planSlug)
@@ -43,10 +41,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's site
-    const { data: site, error: siteError } = await supabase
+    const { data: site, error: siteError } = await supabaseAdmin
       .from('sites')
       .select('id')
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single();
 
     if (siteError || !site) {
@@ -56,17 +54,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Create Razorpay subscription using Razorpay API
-    // For MVP, return mock order details
-    const mockOrderId = `order_${Date.now()}`;
+    // Create Razorpay order/subscription
+    let razorpayOrderId: string | null = null;
+    let razorpaySubscriptionId: string | null = null;
+
+    if (plan.interval === 'one_time') {
+      // One-time payment (Basic plan)
+      const order = await createRazorpayOrder(plan.price_cents, 'INR', `site_${site.id}`);
+      if (!order) {
+        return NextResponse.json(
+          { error: 'Failed to create payment order. Please try again.' },
+          { status: 500 }
+        );
+      }
+      razorpayOrderId = order.id;
+    } else {
+      // Monthly subscription (Pro/Premium plans)
+      // Note: Requires Razorpay plan_id in database or create plan on-the-fly
+      const subscription = await createRazorpaySubscription(
+        `plan_${plan.slug}`, // This should match Razorpay plan ID
+        user.email || '',
+        user.full_name || user.username
+      );
+      if (!subscription) {
+        return NextResponse.json(
+          { error: 'Failed to create subscription. Please try again.' },
+          { status: 500 }
+        );
+      }
+      razorpaySubscriptionId = subscription.id;
+    }
 
     // Store subscription record (status: pending_payment)
-    const { error: subError } = await supabase
+    const { error: subError } = await supabaseAdmin
       .from('subscriptions')
       .insert({
         site_id: site.id,
         plan_id: plan.id,
         status: 'pending_payment',
+        razorpay_subscription_id: razorpaySubscriptionId,
       });
 
     if (subError) {
@@ -80,11 +106,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        razorpayOrderId: mockOrderId,
+        razorpayOrderId,
+        razorpaySubscriptionId,
         amount: plan.price_cents,
         currency: 'INR',
-        planName: plan.name,
-        planDescription: plan.description,
+        plan: {
+          id: plan.id,
+          slug: plan.slug,
+          name: plan.name,
+          interval: plan.interval,
+        },
+        keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
       },
       { status: 200 }
     );

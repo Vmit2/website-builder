@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide covers deploying the Portfolio Builder to production on Vercel.
+This guide covers deploying the At-Solvexx to production on Vercel.
 
 ## Prerequisites
 
@@ -77,7 +77,7 @@ CREATE POLICY "Admins can view all sites" ON sites
    - GitHub
 3. Set redirect URLs:
    - Development: `http://localhost:3000/auth/callback`
-   - Production: `https://brand.com/auth/callback`
+   - Production: `https://at-solvexx.com/auth/callback`
 
 ## Step 2: Configure Razorpay
 
@@ -113,7 +113,7 @@ Plan 3: Premium
 ### 2.3 Configure Webhooks
 
 1. Go to Settings → Webhooks
-2. Add webhook URL: `https://brand.com/api/webhooks/razorpay`
+2. Add webhook URL: `https://at-solvexx.com/api/webhooks/razorpay`
 3. Select events:
    - `subscription.activated`
    - `subscription.paused`
@@ -143,7 +143,7 @@ In Cloudflare DNS settings:
 
 ```
 Type: CNAME
-Name: *.brand (wildcard)
+Name: *.at-solvexx (wildcard)
 Content: your-vercel-alias.vercel.app
 TTL: Auto
 Proxy: Proxied
@@ -166,8 +166,8 @@ This allows all subdomains to point to Vercel.
 In Vercel project settings, add:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://brand.com
-NEXT_PUBLIC_APP_NAME=Portfolio Builder
+NEXT_PUBLIC_SITE_URL=https://at-solvexx.com
+NEXT_PUBLIC_APP_NAME=At-Solvexx
 
 # Supabase
 SUPABASE_URL=https://your-project.supabase.co
@@ -187,14 +187,14 @@ CLOUDFLARE_ZONE_ID=your-zone-id
 RESEND_API_KEY=your-resend-key
 
 # Admin
-ADMIN_EMAIL=admin@brand.com
+ADMIN_EMAIL=admin@at-solvexx.com
 ```
 
 ### 4.3 Configure Custom Domain
 
 1. In Vercel project, go to Settings → Domains
-2. Add custom domain: `brand.com`
-3. Add www subdomain: `www.brand.com`
+2. Add custom domain: `at-solvexx.com`
+3. Add www subdomain: `www.at-solvexx.com`
 4. Verify DNS configuration
 
 ### 4.4 Enable Preview Deployments
@@ -217,7 +217,7 @@ docker run -d \
   -e DB_POSTGRESDB_DATABASE=n8n \
   -e DB_POSTGRESDB_USER=n8n_user \
   -e DB_POSTGRESDB_PASSWORD=secure_password \
-  -e N8N_HOST=n8n.brand.com \
+  -e N8N_HOST=n8n.at-solvexx.com \
   -e N8N_PROTOCOL=https \
   -e NODE_ENV=production \
   n8nio/n8n:latest
@@ -259,7 +259,7 @@ Create email templates in Resend:
 
 1. Go to https://plausible.io
 2. Sign up
-3. Add site: `brand.com`
+3. Add site: `at-solvexx.com`
 4. Get tracking code
 
 ### 7.2 Add Tracking Script
@@ -269,7 +269,7 @@ Add to `apps/web/app/layout.tsx`:
 ```tsx
 <script
   defer
-  data-domain="brand.com"
+  data-domain="at-solvexx.com"
   src="https://plausible.io/js/script.js"
 ></script>
 ```
@@ -423,16 +423,16 @@ export async function POST(request: NextRequest) {
 
 ```bash
 # Test signup
-curl -X POST https://brand.com/api/auth/signup \
+curl -X POST https://at-solvexx.com/api/auth/signup \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","username":"testuser","fullName":"Test User"}'
 
 # Test themes endpoint
-curl https://brand.com/api/themes
+curl https://at-solvexx.com/api/themes
 
 # Test admin endpoint
 curl -H "Authorization: Bearer $TOKEN" \
-  https://brand.com/api/admin/sites
+  https://at-solvexx.com/api/admin/sites
 ```
 
 ### 13.2 End-to-End Tests

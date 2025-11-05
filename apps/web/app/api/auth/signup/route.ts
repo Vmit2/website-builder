@@ -63,18 +63,39 @@ export async function POST(request: NextRequest) {
     // Check if email or username already exists
     const { data: existingUser } = await supabaseAdmin
       .from('users')
-      .select('id')
+      .select('id, email_verified, signup_stage')
       .or(`email.eq.${email},username.eq.${username}`)
       .single();
 
     if (existingUser) {
+      // If user exists but email not verified, allow resending OTP
+      if (!existingUser.email_verified || existingUser.signup_stage !== 'verified') {
+        return NextResponse.json(
+          { error: 'Email not verified. Please verify your email first.' },
+          { status: 403 }
+        );
+      }
       return NextResponse.json(
         { error: 'Email or username already exists.' },
         { status: 409 }
       );
     }
 
-    // Create user
+    // Check if user exists and email is verified before creating site
+    const { data: verifiedUser } = await supabaseAdmin
+      .from('users')
+      .select('id, email_verified, signup_stage')
+      .eq('email', email)
+      .single();
+
+    if (!verifiedUser || !verifiedUser.email_verified || verifiedUser.signup_stage !== 'verified') {
+      return NextResponse.json(
+        { error: 'Email verification required. Please verify your email first.' },
+        { status: 403 }
+      );
+    }
+
+    // Create user (should already exist from verification step)
     const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .insert({
@@ -88,15 +109,28 @@ export async function POST(request: NextRequest) {
 
     if (userError || !user) {
       console.error('Error creating user:', userError);
+      
+      // Provide helpful error messages
+      if (userError?.code === 'PGRST205' || userError?.message?.includes('relation') || userError?.message?.includes('does not exist')) {
+        return NextResponse.json(
+          { 
+            error: 'Database tables not found. Please ensure the database schema has been run in Supabase.',
+            details: 'Run docs/schema.sql in your Supabase SQL Editor to create the required tables.'
+          },
+          { status: 500 }
+        );
+      }
+      
       return NextResponse.json(
-        { error: 'Failed to create user.' },
+        { error: 'Failed to create user.', details: userError?.message },
         { status: 500 }
       );
     }
 
-    // Create site record
+    // Create site record with 24-hour trial expiry
     const previewToken = generatePreviewToken();
     const launchTime = getTrialExpiryTime();
+    const expiresAt = new Date(launchTime); // expires_at = launch_time (24 hours from now)
 
     const { data: site, error: siteError } = await supabaseAdmin
       .from('sites')
@@ -107,6 +141,7 @@ export async function POST(request: NextRequest) {
         status: 'pending',
         coming_soon: true,
         launch_time: launchTime.toISOString(),
+        expires_at: expiresAt.toISOString(), // 24-hour trial expiry
         content: {
           headline: `Welcome to ${fullName || username}'s portfolio`,
           bio: 'Your portfolio is ready to be customized.',

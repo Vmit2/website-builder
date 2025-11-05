@@ -79,7 +79,7 @@
       "type": "n8n-nodes-base.resend",
       "position": [900, 100],
       "parameters": {
-        "from": "noreply@brand.com",
+        "from": "noreply@at-solvexx.com",
         "to": "={{ $json.user_email }}",
         "subject": "Subscription Activated - Welcome to Pro!",
         "htmlBody": "<h1>Welcome to Pro!</h1><p>Your subscription has been activated. Your portfolio is now live with premium features.</p>"
@@ -90,7 +90,7 @@
       "type": "n8n-nodes-base.resend",
       "position": [900, 200],
       "parameters": {
-        "from": "noreply@brand.com",
+        "from": "noreply@at-solvexx.com",
         "to": "={{ $json.user_email }}",
         "subject": "Subscription Paused",
         "htmlBody": "<h1>Subscription Paused</h1><p>Your subscription has been paused. You can resume it anytime from your dashboard.</p>"
@@ -101,7 +101,7 @@
       "type": "n8n-nodes-base.resend",
       "position": [900, 300],
       "parameters": {
-        "from": "noreply@brand.com",
+        "from": "noreply@at-solvexx.com",
         "to": "={{ $json.user_email }}",
         "subject": "Subscription Cancelled",
         "htmlBody": "<h1>Subscription Cancelled</h1><p>Your subscription has been cancelled. We hope to see you again soon!</p>"

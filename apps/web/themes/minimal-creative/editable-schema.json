@@ -1,0 +1,146 @@
+{
+  "themeSlug": "minimal-creative",
+  "sections": [
+            {
+            "id": "hero-title",
+            "type": "text",
+            "default": "I'm a Creative Designer",
+            "editable": true,
+            "tag": "h1",
+            "placeholder": "Your awesome headline here",
+            "section": "hero"
+        },
+        {
+            "id": "hero-subtitle",
+            "type": "text",
+            "default": "Building beautiful digital experiences that inspire and engage",
+            "editable": true,
+            "tag": "p",
+            "placeholder": "Your tagline or subtitle",
+            "section": "hero"
+        },
+        {
+            "id": "hero-image",
+            "type": "image",
+            "default": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800",
+            "editable": true,
+            "placeholder": "/placeholder-hero.jpg",
+            "section": "hero"
+        },
+        {
+            "id": "hero-cta",
+            "type": "text",
+            "default": "Get Started",
+            "editable": true,
+            "tag": "button",
+            "placeholder": "Button text",
+            "section": "hero"
+        },
+            {
+            "id": "about-title",
+            "type": "text",
+            "default": "About Me",
+            "editable": true,
+            "tag": "h2",
+            "placeholder": "Section title",
+            "section": "about"
+        },
+        {
+            "id": "about-bio",
+            "type": "text",
+            "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+            "editable": true,
+            "tag": "p",
+            "placeholder": "Write something about yourself...",
+            "section": "about"
+        },
+            {
+            "id": "services-title",
+            "type": "text",
+            "default": "What I Do",
+            "editable": true,
+            "tag": "h2",
+            "placeholder": "Section title",
+            "section": "services"
+        },
+        {
+            "id": "service-1",
+            "type": "text",
+            "default": "Web Design",
+            "editable": true,
+            "tag": "h3",
+            "placeholder": "Service name",
+            "section": "services"
+        },
+        {
+            "id": "service-1-desc",
+            "type": "text",
+            "default": "Creating stunning and responsive web designs that captivate your audience",
+            "editable": true,
+            "tag": "p",
+            "placeholder": "Service description",
+            "section": "services"
+        },
+        {
+            "id": "service-2",
+            "type": "text",
+            "default": "Branding",
+            "editable": true,
+            "tag": "h3",
+            "placeholder": "Service name",
+            "section": "services"
+        },
+        {
+            "id": "service-2-desc",
+            "type": "text",
+            "default": "Building memorable brand identities that stand out in the marketplace",
+            "editable": true,
+            "tag": "p",
+            "placeholder": "Service description",
+            "section": "services"
+        },
+        {
+            "id": "service-3",
+            "type": "text",
+            "default": "UI/UX",
+            "editable": true,
+            "tag": "h3",
+            "placeholder": "Service name",
+            "section": "services"
+        },
+        {
+            "id": "service-3-desc",
+            "type": "text",
+            "default": "Designing intuitive user experiences that users love to interact with",
+            "editable": true,
+            "tag": "p",
+            "placeholder": "Service description",
+            "section": "services"
+        },
+            {
+            "id": "contact-title",
+            "type": "text",
+            "default": "Get In Touch",
+            "editable": true,
+            "tag": "h2",
+            "placeholder": "Section title",
+            "section": "contact"
+        },
+        {
+            "id": "contact-email",
+            "type": "text",
+            "default": "hello@example.com",
+            "editable": true,
+            "tag": "p",
+            "placeholder": "Your email address",
+            "section": "contact"
+        },
+        {
+            "id": "social-links",
+            "type": "repeatable",
+            "editable": true,
+            "placeholder": "Social Media Links",
+            "section": "contact"
+        }
+  ]
+}

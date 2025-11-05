@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/db';
-import { verifyRazorpaySignature, createAuditLog } from '@/lib/utils';
+import { verifyRazorpaySignature } from '@/lib/utils';
 
 /**
  * Razorpay webhook handler

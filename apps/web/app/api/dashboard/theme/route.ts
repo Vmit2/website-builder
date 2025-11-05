@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/db';
+import { supabaseAdmin } from '@/lib/db';
+import { getUserFromRequest } from '@/lib/auth';
 
 /**
  * POST /api/dashboard/theme - Update site theme and palette
@@ -7,14 +8,10 @@ import { supabase } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add authentication check
-    const userId = request.nextUrl.searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required.' },
-        { status: 400 }
-      );
+    // Require authentication
+    const user = await getUserFromRequest(request);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -28,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify theme exists
-    const { data: theme, error: themeError } = await supabase
+    const { data: theme, error: themeError } = await supabaseAdmin
       .from('themes')
       .select('id')
       .eq('slug', themeSlug)
@@ -42,11 +39,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Update user's site
-    const { data: site, error: siteError } = await supabase
+    const { data: site, error: siteError } = await supabaseAdmin
       .from('sites')
       .select('id')
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single();
+    
+    // Verify user owns the site (unless admin)
+    if (site && site.user_id !== user.id && user.role !== 'admin' && user.role !== 'super_admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     if (siteError || !site) {
       return NextResponse.json(
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from('sites')
       .update({
         theme_slug: themeSlug,

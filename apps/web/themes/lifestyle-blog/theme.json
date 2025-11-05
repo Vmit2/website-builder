@@ -1,0 +1,29 @@
+{
+  "id": "lifestyle-blog",
+  "name": "Lifestyle Blog",
+  "description": "Blog + feed emphasis",
+  "colors": {
+    "primary": "#6b7280",
+    "secondary": "#f3f4f6",
+    "accent": "#ec4899",
+    "background": "#ffffff",
+    "text": "#111827"
+  },
+  "fonts": {
+    "heading": "Playfair Display",
+    "body": "Lora"
+  },
+  "layout": {
+    "sections": ["hero", "featured", "blog", "about", "contact"]
+  },
+  "components": {
+    "hero": {
+      "type": "Hero3",
+      "bg": "image"
+    },
+    "blog": {
+      "type": "BlogFeed",
+      "columns": 2
+    }
+  }
+}

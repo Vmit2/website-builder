@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Portfolio Builder is a **multi-tenant SaaS application** that enables users to create professional portfolio websites in minutes. The architecture is designed for scalability, security, and ease of deployment.
+The At-Solvexx is a **multi-tenant SaaS application** that enables users to create professional portfolio websites in minutes. The architecture is designed for scalability, security, and ease of deployment.
 
 ## High-Level Architecture
 
@@ -48,10 +48,10 @@ The Portfolio Builder is a **multi-tenant SaaS application** that enables users 
 
 ### Subdomain-Based Tenancy
 
-Each user gets a unique subdomain: `username.brand.com`
+Each user gets a unique subdomain: `username.at-solvexx.com`
 
 **Routing Flow**:
-1. User visits `alice.brand.com`
+1. User visits `alice.at-solvexx.com`
 2. Middleware extracts subdomain: `alice`
 3. Query database: `SELECT * FROM sites WHERE username = 'alice'`
 4. Render user's site with their theme and content

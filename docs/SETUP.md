@@ -1,6 +1,6 @@
 # Detailed Setup Guide
 
-This guide provides step-by-step instructions for setting up all external services required for the Portfolio Builder MVP.
+This guide provides step-by-step instructions for setting up all external services required for the At-Solvexx MVP.
 
 ## Table of Contents
 
@@ -80,8 +80,8 @@ ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
 1. Go to **Authentication** → **URL Configuration**
 2. Add Redirect URLs:
    - Development: `http://localhost:3000/auth/callback`
-   - Staging: `https://staging.brand.com/auth/callback`
-   - Production: `https://brand.com/auth/callback`
+   - Staging: `https://staging.at-solvexx.com/auth/callback`
+   - Production: `https://at-solvexx.com/auth/callback`
 
 ## Razorpay Setup
 
@@ -135,7 +135,7 @@ Once verified:
 
 1. Go to **Settings** → **Webhooks**
 2. Click "Add New Webhook"
-3. Enter webhook URL: `https://brand.com/api/webhooks/razorpay`
+3. Enter webhook URL: `https://at-solvexx.com/api/webhooks/razorpay`
 4. Select events:
    - `subscription.activated`
    - `subscription.paused`
@@ -161,7 +161,7 @@ For development, use Razorpay's test keys:
 
 1. Go to https://cloudflare.com
 2. Click "Add Site"
-3. Enter your domain: `brand.com`
+3. Enter your domain: `at-solvexx.com`
 4. Select plan (Free tier is fine for MVP)
 5. Cloudflare will scan DNS records
 6. Update nameservers at your registrar:
@@ -176,14 +176,14 @@ For development, use Razorpay's test keys:
 3. Use template: "Edit zone DNS"
 4. Configure permissions:
    - **Permissions**: Zone → DNS → Edit
-   - **Zone Resources**: Include → Specific zone → brand.com
+   - **Zone Resources**: Include → Specific zone → at-solvexx.com
 5. Click "Continue to summary"
 6. Review and click "Create Token"
 7. Copy token → `CLOUDFLARE_TOKEN`
 
 ### 3.3 Get Account ID and Zone ID
 
-1. Go to **Websites** → Select brand.com
+1. Go to **Websites** → Select at-solvexx.com
 2. Right sidebar shows:
    - **Account ID** → `CLOUDFLARE_ACCOUNT_ID`
    - **Zone ID** → `CLOUDFLARE_ZONE_ID`
@@ -194,7 +194,7 @@ For development, use Razorpay's test keys:
 2. Click "Add Record"
 3. Configure:
    - **Type**: CNAME
-   - **Name**: *.brand (wildcard for all subdomains)
+   - **Name**: *.at-solvexx (wildcard for all subdomains)
    - **Target**: your-vercel-alias.vercel.app
    - **TTL**: Auto
    - **Proxy Status**: Proxied (orange cloud)
@@ -222,14 +222,14 @@ For development, use Razorpay's test keys:
 
 1. Go to **API Keys**
 2. Click "Create API Key"
-3. Name it: "Portfolio Builder"
+3. Name it: "At-Solvexx"
 4. Copy key → `RESEND_API_KEY`
 
 ### 4.3 Add Domain
 
 1. Go to **Domains**
 2. Click "Add Domain"
-3. Enter: `noreply.brand.com`
+3. Enter: `noreply.at-solvexx.com`
 4. Add DNS records to Cloudflare:
    - **DKIM Record**: Copy from Resend
    - **SPF Record**: Copy from Resend
@@ -240,7 +240,7 @@ For development, use Razorpay's test keys:
 In Resend dashboard, create templates for:
 
 1. **Welcome Email**
-   - Subject: "Welcome to Portfolio Builder"
+   - Subject: "Welcome to At-Solvexx"
    - Content: Signup confirmation + preview link
 
 2. **Approval Email**
@@ -299,10 +299,10 @@ cd ../..
 Add to `/etc/hosts` (macOS/Linux) or `C:\Windows\System32\drivers\etc\hosts` (Windows):
 
 ```
-127.0.0.1 brand.test
-127.0.0.1 alice.brand.test
-127.0.0.1 bob.brand.test
-127.0.0.1 admin.brand.test
+127.0.0.1 at-solvexx.test
+127.0.0.1 alice.at-solvexx.test
+127.0.0.1 bob.at-solvexx.test
+127.0.0.1 admin.at-solvexx.test
 ```
 
 ### 5.5 Start Development Server
@@ -317,10 +317,10 @@ Visit `http://localhost:3000` to see the app.
 
 ```bash
 # User portfolio
-http://alice.brand.test:3000
+http://alice.at-solvexx.test:3000
 
 # Admin panel
-http://admin.brand.test:3000/admin
+http://admin.at-solvexx.test:3000/admin
 ```
 
 ## Testing
@@ -406,7 +406,7 @@ npm run test:e2e
      -H "Authorization: Bearer $RESEND_API_KEY" \
      -H "Content-Type: application/json" \
      -d '{
-       "from": "noreply@brand.com",
+       "from": "noreply@at-solvexx.com",
        "to": "test@example.com",
        "subject": "Test",
        "html": "<p>Test email</p>"

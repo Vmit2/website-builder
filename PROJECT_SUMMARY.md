@@ -1,8 +1,8 @@
-# Portfolio Builder MVP - Project Summary
+# At-Solvexx MVP - Project Summary
 
 ## Project Overview
 
-**Dumbdee Portfolio Builder** is a multi-tenant SaaS application that enables influencers and freelancers to create professional portfolio websites in minutes. Users receive a **24-hour free trial** on a branded subdomain, with optional paid upgrades for advanced features and custom domains.
+**Aariyatech At-Solvexx** is a multi-tenant SaaS application that enables influencers and freelancers to create professional portfolio websites in minutes. Users receive a **24-hour free trial** on a branded subdomain, with optional paid upgrades for advanced features and custom domains.
 
 **Repository**: https://github.com/Vmit2/website-builder  
 **Branch**: `feature/mvp-website-builder`  
@@ -14,7 +14,7 @@
 
 ### ✅ Multi-Tenant Architecture
 - Single Next.js app serving all users
-- Subdomain-based routing (`username.brand.com`)
+- Subdomain-based routing (`username.at-solvexx.com`)
 - Middleware for automatic tenant detection
 - Row-level security for data isolation
 
@@ -361,7 +361,7 @@ cp .env.example .env.local
 # Edit .env.local with your credentials
 
 # 3. Add to /etc/hosts
-echo "127.0.0.1 brand.test" >> /etc/hosts
+echo "127.0.0.1 at-solvexx.test" >> /etc/hosts
 
 # 4. Start dev server
 npm run dev
@@ -389,7 +389,7 @@ See `docs/QUICKSTART.md` for detailed guide.
 ## Contact & Support
 
 - **GitHub Issues**: https://github.com/Vmit2/website-builder/issues
-- **Email**: support@brand.com
+- **Email**: support@at-solvexx.com
 - **Documentation**: See `/docs` folder
 
 ---

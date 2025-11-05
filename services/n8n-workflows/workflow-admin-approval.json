@@ -62,10 +62,10 @@
       "type": "n8n-nodes-base.resend",
       "position": [1100, 200],
       "parameters": {
-        "from": "noreply@brand.com",
+        "from": "noreply@at-solvexx.com",
         "to": "={{ $json.email }}",
         "subject": "Your Portfolio Site is Now Live!",
-        "htmlBody": "<h1>Congratulations!</h1><p>Your portfolio site at <a href='https://{{ $json.username }}.brand.com'>{{ $json.username }}.brand.com</a> has been approved and is now fully live.</p><p>Start sharing your work with the world!</p>"
+        "htmlBody": "<h1>Congratulations!</h1><p>Your portfolio site at <a href='https://{{ $json.username }}.at-solvexx.com'>{{ $json.username }}.at-solvexx.com</a> has been approved and is now fully live.</p><p>Start sharing your work with the world!</p>"
       }
     },
     {

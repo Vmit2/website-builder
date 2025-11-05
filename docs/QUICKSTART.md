@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-Get the Portfolio Builder running locally in 5 minutes.
+Get the At-Solvexx running locally in 5 minutes.
 
 ## Prerequisites
 
@@ -49,9 +49,9 @@ RAZORPAY_KEY_SECRET=your-secret
 Add to `/etc/hosts`:
 
 ```
-127.0.0.1 brand.test
-127.0.0.1 alice.brand.test
-127.0.0.1 admin.brand.test
+127.0.0.1 at-solvexx.test
+127.0.0.1 alice.at-solvexx.test
+127.0.0.1 admin.at-solvexx.test
 ```
 
 ## Step 4: Start Development Server (1 min)
@@ -191,7 +191,7 @@ Authorization: Bearer TOKEN
 
 - GitHub Issues: https://github.com/Vmit2/website-builder/issues
 - Documentation: See `/docs` folder
-- Email: support@brand.com
+- Email: support@at-solvexx.com
 
 ---
 

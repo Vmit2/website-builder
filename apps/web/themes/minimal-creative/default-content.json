@@ -1,0 +1,71 @@
+{
+  "hero": {
+    "title": "Welcome to My Portfolio",
+    "subtitle": "Designer. Creator. Visionary.",
+    "ctaText": "View My Work",
+    "ctaLink": "#portfolio"
+  },
+  "about": {
+    "title": "About Me",
+    "text": "This is your creative space. Add your story here. Tell visitors about who you are, what you do, and what makes you unique."
+  },
+  "services": {
+    "title": "Services",
+    "items": [
+      "Web Design",
+      "Brand Identity",
+      "UI/UX Design"
+    ]
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "projects": [
+      {
+        "title": "Project 1",
+        "description": "A brief description of your project",
+        "image": "/free-assets/project-1.jpg"
+      },
+      {
+        "title": "Project 2",
+        "description": "Another amazing project",
+        "image": "/free-assets/project-2.jpg"
+      },
+      {
+        "title": "Project 3",
+        "description": "Your third project showcase",
+        "image": "/free-assets/project-3.jpg"
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "What Clients Say",
+    "items": [
+      {
+        "name": "Client Name",
+        "role": "CEO, Company",
+        "text": "Working with this team was an amazing experience. Highly recommended!"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "email": "your@email.com",
+    "phone": "+1 234 567 8900",
+    "ctaText": "Send Message",
+    "message": "I'd love to hear from you. Send me a message and I'll respond as soon as possible."
+  },
+  "socialLinks": [
+    {
+      "platform": "Instagram",
+      "url": "https://instagram.com/yourusername"
+    },
+    {
+      "platform": "LinkedIn",
+      "url": "https://linkedin.com/in/yourusername"
+    },
+    {
+      "platform": "Twitter",
+      "url": "https://twitter.com/yourusername"
+    }
+  ]
+}

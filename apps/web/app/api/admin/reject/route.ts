@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/db';
 import { createAuditLog } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth';
+import { sendRejectionEmail } from '@/lib/email';
 
 /**
  * POST /api/admin/reject
@@ -9,10 +11,12 @@ import { createAuditLog } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check
+    // Require admin authentication
+    const admin = await requireAdmin(request);
 
     const body = await request.json();
-    const { siteId, adminId, reason } = body;
+    const { siteId, reason } = body;
+    const adminId = admin.id;
 
     if (!siteId || !adminId) {
       return NextResponse.json(
@@ -68,17 +72,14 @@ export async function POST(request: NextRequest) {
       { reason }
     );
 
-    // TODO: Send rejection email to user
-    // await sendEmail({
-    //   to: site.users.email,
-    //   subject: 'Portfolio Submission Rejected',
-    //   template: 'rejection',
-    //   data: {
-    //     userName: site.users.full_name,
-    //     reason,
-    //     supportEmail: 'support@brand.com'
-    //   }
-    // });
+    // Send rejection email to user
+    if (site.users?.email) {
+      await sendRejectionEmail(
+        site.users.email,
+        site.users.full_name || site.username,
+        reason
+      );
+    }
 
     return NextResponse.json(
       {

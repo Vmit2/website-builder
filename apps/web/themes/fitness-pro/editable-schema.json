@@ -1,0 +1,60 @@
+{
+  "themeSlug": "fitness-pro",
+  "sections": [
+    {
+      "id": "hero-title",
+      "type": "text",
+      "default": "Transform Your Body",
+      "editable": true,
+      "tag": "h1",
+      "placeholder": "Your fitness headline"
+    },
+    {
+      "id": "hero-cta",
+      "type": "text",
+      "default": "Start Your Journey",
+      "editable": true,
+      "tag": "span",
+      "placeholder": "CTA button text"
+    },
+    {
+      "id": "hero-image",
+      "type": "image",
+      "default": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800",
+      "editable": true,
+      "placeholder": "/placeholder-fitness.jpg"
+    },
+    {
+      "id": "programs-title",
+      "type": "text",
+      "default": "Training Programs",
+      "editable": true,
+      "tag": "h2",
+      "placeholder": "Section title"
+    },
+    {
+      "id": "program-1",
+      "type": "text",
+      "default": "Strength Training",
+      "editable": true,
+      "tag": "h3",
+      "placeholder": "Program name"
+    },
+    {
+      "id": "testimonial-text",
+      "type": "text",
+      "default": "\"Best fitness program I've ever tried!\"",
+      "editable": true,
+      "tag": "p",
+      "placeholder": "Testimonial text"
+    },
+    {
+      "id": "testimonial-author",
+      "type": "text",
+      "default": "John Doe",
+      "editable": true,
+      "tag": "span",
+      "placeholder": "Author name"
+    }
+  ]
+}

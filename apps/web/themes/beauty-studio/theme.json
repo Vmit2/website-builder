@@ -1,0 +1,29 @@
+{
+  "id": "beauty-studio",
+  "name": "Beauty Studio",
+  "description": "Feminine palette for makeup artists",
+  "colors": {
+    "primary": "#d946ef",
+    "secondary": "#f9fafb",
+    "accent": "#f472b6",
+    "background": "#ffffff",
+    "text": "#1f2937"
+  },
+  "fonts": {
+    "heading": "Cormorant Garamond",
+    "body": "Source Sans Pro"
+  },
+  "layout": {
+    "sections": ["hero", "gallery", "services", "testimonials", "contact"]
+  },
+  "components": {
+    "hero": {
+      "type": "Hero4",
+      "bg": "pastel"
+    },
+    "gallery": {
+      "type": "MasonryGrid",
+      "columns": 3
+    }
+  }
+}

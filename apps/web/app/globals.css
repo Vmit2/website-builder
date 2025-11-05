@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Configure dark mode variant for Tailwind v4 */
+@variant dark (&:is(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -13,14 +16,71 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+/* Ensure dark mode styles are applied when .dark class is present */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+/* Tailwind v4 dark mode - ensure dark: variants work */
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Dark mode styles */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+/* Prevent editing of trial banner and upgrade CTA */
+[data-trial-banner="protected"],
+[data-upgrade-cta="protected"] {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: auto !important;
+}
+
+[data-trial-banner="protected"] *,
+[data-upgrade-cta="protected"] * {
+  pointer-events: auto !important;
+}
+
+/* Ensure trial banner stays at bottom */
+[data-trial-banner="protected"] {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+}
+
+/* Ensure upgrade CTA stays visible */
+[data-upgrade-cta="protected"] {
+  position: fixed !important;
+  z-index: 10000 !important;
+}
+
+/* Pulse animation for upgrade CTA */
+@keyframes pulse-cta {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.7);
+  }
 }

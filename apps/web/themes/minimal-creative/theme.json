@@ -1,0 +1,29 @@
+{
+  "id": "minimal-creative",
+  "name": "Minimal Creative",
+  "description": "Clean personal portfolio layout",
+  "colors": {
+    "primary": "#000000",
+    "secondary": "#ffffff",
+    "accent": "#e63946",
+    "background": "#ffffff",
+    "text": "#333333"
+  },
+  "fonts": {
+    "heading": "Poppins",
+    "body": "Inter"
+  },
+  "layout": {
+    "sections": ["hero", "about", "portfolio", "contact"]
+  },
+  "components": {
+    "hero": {
+      "type": "Hero1",
+      "bg": "light"
+    },
+    "portfolio": {
+      "type": "GridGallery",
+      "columns": 3
+    }
+  }
+}

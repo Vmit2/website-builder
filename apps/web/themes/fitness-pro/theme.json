@@ -1,0 +1,29 @@
+{
+  "id": "fitness-pro",
+  "name": "Fitness Pro",
+  "description": "Energetic, CTA focused for trainers",
+  "colors": {
+    "primary": "#ff6b35",
+    "secondary": "#004e89",
+    "accent": "#ffd23f",
+    "background": "#ffffff",
+    "text": "#1a1a1a"
+  },
+  "fonts": {
+    "heading": "Montserrat",
+    "body": "Open Sans"
+  },
+  "layout": {
+    "sections": ["hero", "services", "testimonials", "contact"]
+  },
+  "components": {
+    "hero": {
+      "type": "Hero2",
+      "bg": "gradient"
+    },
+    "services": {
+      "type": "CardGrid",
+      "columns": 2
+    }
+  }
+}

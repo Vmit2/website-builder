@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getSiteUrl, getSiteDomainSuffix } from '@/lib/utils';
 
 interface Site {
   id: string;
@@ -130,11 +131,11 @@ export default function AdminDashboard() {
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">
                       <Link
-                        href={`https://${site.username}.brand.test`}
+                        href={getSiteUrl(site.username)}
                         target="_blank"
                         className="text-blue-600 hover:underline"
                       >
-                        {site.username}.brand.com
+                        {site.username}{getSiteDomainSuffix()}
                       </Link>
                     </h2>
                     <p className="text-sm text-gray-600 mt-1">

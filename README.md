@@ -1,10 +1,10 @@
-# Dumbdee Portfolio Builder - MVP
+# Aariyatech At-Solvexx - MVP
 
 A **multi-tenant portfolio builder** that allows influencers and freelancers to create professional portfolio websites in minutes. Users get a **24-hour free trial** on a branded subdomain, with optional paid upgrades for custom domains, advanced features, and professional email provisioning.
 
 ## 🎯 Key Features
 
-- **Instant Subdomain Provisioning**: `username.brand.com` live in seconds
+- **Instant Subdomain Provisioning**: `username.at-solvexx.com` live in seconds
 - **24-Hour Free Trial**: Coming-Soon page with countdown timer
 - **Theme Gallery**: 10+ pre-built themes with live preview sandbox
 - **Admin Approval System**: Super Admin reviews and approves sites
@@ -148,15 +148,15 @@ Visit `http://localhost:3000` to see the landing page.
 Add to your `/etc/hosts` file:
 
 ```
-127.0.0.1 brand.test
-127.0.0.1 alice.brand.test
-127.0.0.1 bob.brand.test
-127.0.0.1 admin.brand.test
+127.0.0.1 at-solvexx.test
+127.0.0.1 alice.at-solvexx.test
+127.0.0.1 bob.at-solvexx.test
+127.0.0.1 admin.at-solvexx.test
 ```
 
 Then visit:
-- `http://alice.brand.test:3000` → User's portfolio
-- `http://admin.brand.test:3000/admin` → Admin panel
+- `http://alice.at-solvexx.test:3000` → User's portfolio
+- `http://admin.at-solvexx.test:3000/admin` → Admin panel
 
 ## 📚 Core User Flows
 
@@ -168,7 +168,7 @@ Enters username, email, chooses theme + palette →
 Preview sandbox shows live preview → 
 Clicks "Start Free Trial" → 
 DB creates site record (coming_soon=true, launch_time=now+24h) → 
-Subdomain username.brand.com provisioned → 
+Subdomain username.at-solvexx.com provisioned → 
 Email sent with preview link → 
 User sees Coming-Soon page with countdown
 ```
@@ -284,4 +284,4 @@ MIT License
 
 ---
 
-**Built with ❤️ by the Dumbdee Team**
+**Built with ❤️ by the Aariyatech Team**

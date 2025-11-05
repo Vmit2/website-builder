@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth';
 
 /**
  * Get all sites for admin dashboard
@@ -7,7 +8,8 @@ import { supabaseAdmin } from '@/lib/db';
  */
 export async function GET(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check
+    // Require admin authentication
+    await requireAdmin(request);
 
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status') || 'pending';

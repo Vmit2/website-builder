@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
           description: theme.description,
           demoUrl: theme.demo_url,
           previewImageUrl: theme.preview_image_url,
+          comingSoon: theme.coming_soon || false,
         })),
       },
       { status: 200 }

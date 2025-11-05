@@ -10,6 +10,7 @@ interface Theme {
   description: string;
   demoUrl: string;
   previewImageUrl?: string;
+  comingSoon?: boolean;
 }
 
 interface Palette {
@@ -77,6 +78,13 @@ export default function ThemeSelector({ userId }: { userId: string }) {
 
   const handleSaveTheme = async () => {
     if (!selectedTheme) return;
+    
+    // Check if theme is coming soon
+    const selectedThemeData = themes.find(t => t.slug === selectedTheme);
+    if (selectedThemeData?.comingSoon) {
+      alert('This theme is coming soon!');
+      return;
+    }
 
     try {
       setSaving(true);
@@ -121,13 +129,20 @@ export default function ThemeSelector({ userId }: { userId: string }) {
           {themes.map((theme) => (
             <div
               key={theme.id}
-              onClick={() => setSelectedTheme(theme.slug)}
-              className={`cursor-pointer rounded-lg border-2 overflow-hidden transition-all ${
-                selectedTheme === theme.slug
-                  ? 'border-blue-600 shadow-lg'
-                  : 'border-gray-200 hover:border-gray-300'
+              onClick={() => !theme.comingSoon && setSelectedTheme(theme.slug)}
+              className={`rounded-lg border-2 overflow-hidden transition-all relative ${
+                theme.comingSoon
+                  ? 'border-gray-300 opacity-60 cursor-not-allowed'
+                  : selectedTheme === theme.slug
+                  ? 'border-blue-600 shadow-lg cursor-pointer'
+                  : 'border-gray-200 hover:border-gray-300 cursor-pointer'
               }`}
             >
+              {theme.comingSoon && (
+                <div className="absolute top-2 right-2 z-10 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  Coming Soon
+                </div>
+              )}
               {theme.previewImageUrl && (
                 <div className="relative h-40 bg-gray-100">
                   <Image
@@ -136,19 +151,29 @@ export default function ThemeSelector({ userId }: { userId: string }) {
                     fill
                     className="object-cover"
                   />
+                  {theme.comingSoon && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <span className="text-white font-semibold text-lg">Coming Soon</span>
+                    </div>
+                  )}
                 </div>
               )}
               <div className="p-4">
                 <h3 className="font-bold text-gray-900">{theme.name}</h3>
                 <p className="text-sm text-gray-600 mt-1">{theme.description}</p>
-                <a
-                  href={theme.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 text-sm hover:underline mt-2 inline-block"
-                >
-                  View Demo →
-                </a>
+                {theme.comingSoon ? (
+                  <p className="text-orange-600 text-sm mt-2 font-medium">Coming Soon</p>
+                ) : (
+                  <a
+                    href={theme.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 text-sm hover:underline mt-2 inline-block"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    View Demo →
+                  </a>
+                )}
               </div>
             </div>
           ))}

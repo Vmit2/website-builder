@@ -1,0 +1,29 @@
+{
+  "id": "music-stage",
+  "name": "Music Stage",
+  "description": "Dark, media heavy for musicians",
+  "colors": {
+    "primary": "#000000",
+    "secondary": "#1a1a1a",
+    "accent": "#ff0080",
+    "background": "#0a0a0a",
+    "text": "#ffffff"
+  },
+  "fonts": {
+    "heading": "Oswald",
+    "body": "Roboto"
+  },
+  "layout": {
+    "sections": ["hero", "music", "videos", "tour", "contact"]
+  },
+  "components": {
+    "hero": {
+      "type": "Hero5",
+      "bg": "dark"
+    },
+    "music": {
+      "type": "Playlist",
+      "columns": 1
+    }
+  }
+}

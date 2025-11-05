@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/db';
 import { createAuditLog } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth';
+import { sendChangeRequestEmail } from '@/lib/email';
+import { getSiteUrl } from '@/lib/utils';
 
 /**
  * POST /api/admin/request-changes
@@ -9,10 +12,12 @@ import { createAuditLog } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check
+    // Require admin authentication
+    const admin = await requireAdmin(request);
 
     const body = await request.json();
-    const { siteId, adminId, comment } = body;
+    const { siteId, comment } = body;
+    const adminId = admin.id;
 
     if (!siteId || !adminId) {
       return NextResponse.json(
@@ -68,17 +73,16 @@ export async function POST(request: NextRequest) {
       { comment }
     );
 
-    // TODO: Send email to user with change request
-    // await sendEmail({
-    //   to: site.users.email,
-    //   subject: 'Changes Requested for Your Portfolio',
-    //   template: 'request-changes',
-    //   data: {
-    //     userName: site.users.full_name,
-    //     comment,
-    //     siteUrl: `https://${site.username}.brand.com`
-    //   }
-    // });
+    // Send email to user with change request
+    if (site.users?.email) {
+      const siteUrl = getSiteUrl(site.username);
+      await sendChangeRequestEmail(
+        site.users.email,
+        site.users.full_name || site.username,
+        comment,
+        siteUrl
+      );
+    }
 
     return NextResponse.json(
       {

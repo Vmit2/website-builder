@@ -26,7 +26,7 @@ if [ -z "$CLOUDFLARE_TOKEN" ] || [ -z "$CLOUDFLARE_ZONE_ID" ]; then
   exit 1
 fi
 
-echo "Provisioning subdomain: $USERNAME.brand.com -> $VERCEL_ALIAS"
+echo "Provisioning subdomain: $USERNAME.at-solvexx.com -> $VERCEL_ALIAS"
 
 # Create CNAME record via Cloudflare API
 RESPONSE=$(curl -s -X POST \
@@ -44,7 +44,7 @@ RESPONSE=$(curl -s -X POST \
 # Check if successful
 if echo "$RESPONSE" | grep -q '"success":true'; then
   echo "✓ Subdomain provisioned successfully!"
-  echo "Visit: https://$USERNAME.brand.com"
+  echo "Visit: https://$USERNAME.at-solvexx.com"
   exit 0
 else
   echo "✗ Failed to provision subdomain"

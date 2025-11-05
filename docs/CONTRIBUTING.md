@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for your interest in contributing to Portfolio Builder! This guide will help you get started.
+Thank you for your interest in contributing to At-Solvexx! This guide will help you get started.
 
 ## Code of Conduct
 
@@ -437,7 +437,7 @@ if (!userId) {
 
 - **GitHub Issues**: Ask questions or report bugs
 - **Discussions**: General questions and ideas
-- **Email**: support@brand.com
+- **Email**: support@at-solvexx.com
 - **Documentation**: Check `/docs` folder first
 
 ## Review Process
@@ -477,7 +477,7 @@ Contributors will be:
 - Check existing issues
 - Read documentation
 - Ask in discussions
-- Email support@brand.com
+- Email support@at-solvexx.com
 
 ---
 

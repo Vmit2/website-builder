@@ -1,9 +1,9 @@
-# Portfolio Builder API Documentation
+# At-Solvexx API Documentation
 
 ## Base URL
 
 ```
-https://brand.com/api
+https://at-solvexx.com/api
 ```
 
 For local development:
@@ -726,7 +726,7 @@ Import it into Postman:
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://brand.com/api',
+  baseURL: 'https://at-solvexx.com/api',
   headers: {
     'Authorization': `Bearer ${token}`
   }
@@ -753,14 +753,14 @@ headers = {
 
 # Get user's site
 response = requests.get(
-    'https://brand.com/api/dashboard/site',
+    'https://at-solvexx.com/api/dashboard/site',
     headers=headers
 )
 site = response.json()
 
 # Update site content
 requests.put(
-    'https://brand.com/api/dashboard/site',
+    'https://at-solvexx.com/api/dashboard/site',
     headers=headers,
     json={
         'headline': 'New Headline',
@@ -774,6 +774,6 @@ requests.put(
 ## Support
 
 For API support and questions:
-- Email: api-support@brand.com
-- Docs: https://docs.brand.com
+- Email: api-support@at-solvexx.com
+- Docs: https://docs.at-solvexx.com
 - GitHub Issues: https://github.com/Vmit2/website-builder/issues

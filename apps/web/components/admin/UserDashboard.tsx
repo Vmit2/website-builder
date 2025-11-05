@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getSiteUrl, getSiteDomainSuffix } from '@/lib/utils';
+import ContentEditor from './ContentEditor';
 
 interface Site {
   id: string;
@@ -27,7 +29,7 @@ interface Analytics {
   avgSessionDuration: number;
 }
 
-export default function UserDashboard({ userId }: { userId: string }) {
+export default function UserDashboard({ userId, username }: { userId: string; username?: string }) {
   const [site, setSite] = useState<Site | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,14 +44,31 @@ export default function UserDashboard({ userId }: { userId: string }) {
     try {
       setLoading(true);
 
-      // Fetch site data
-      const siteResponse = await fetch(`/api/dashboard/site?userId=${userId}`);
+      // Fetch site data - use username from prop, or fallback to localStorage
+      let siteUsername = username;
+      if (!siteUsername) {
+        const storedUser = localStorage.getItem('user');
+        const user = storedUser ? JSON.parse(storedUser) : null;
+        siteUsername = user?.username || null;
+      }
+
+      // Build query params - prioritize username since it's more reliable
+      const params = new URLSearchParams();
+      if (siteUsername) {
+        params.append('username', siteUsername);
+      }
+      if (userId) {
+        params.append('userId', userId);
+      }
+
+      const siteResponse = await fetch(`/api/dashboard/site?${params.toString()}`);
       const siteData = await siteResponse.json();
 
       if (siteData.success) {
         setSite(siteData.site);
       } else {
-        setError(siteData.error);
+        console.error('Site fetch error:', siteData);
+        setError(siteData.error || siteData.details || 'Failed to load site data');
       }
 
       // Fetch analytics
@@ -62,8 +81,8 @@ export default function UserDashboard({ userId }: { userId: string }) {
         setAnalytics(analyticsData.analytics);
       }
     } catch (err) {
+      console.error('Fetch error:', err);
       setError('Failed to load dashboard');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -90,7 +109,8 @@ export default function UserDashboard({ userId }: { userId: string }) {
     );
   }
 
-  const siteUrl = `https://${site.username}.brand.com`;
+  const siteUrl = getSiteUrl(site.username);
+  const siteDomainSuffix = getSiteDomainSuffix();
   const trialEndsAt = site.launchTime ? new Date(site.launchTime) : null;
   const hoursRemaining = trialEndsAt
     ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60)))
@@ -128,7 +148,7 @@ export default function UserDashboard({ userId }: { userId: string }) {
               target="_blank"
               className="text-blue-600 hover:underline font-medium truncate"
             >
-              {site.username}.brand.com
+              {site.username}{siteDomainSuffix}
             </Link>
             <p className="text-xs text-gray-500 mt-2">Visit your site</p>
           </div>
@@ -163,40 +183,22 @@ export default function UserDashboard({ userId }: { userId: string }) {
                   <h3 className="font-medium text-gray-900 mb-2">Palette</h3>
                   <p className="text-gray-600">{site.paletteId || 'Default'}</p>
                 </div>
-                <button className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors">
-                  Upgrade to Pro
-                </button>
+                <div className="mt-6 space-y-3">
+                  <Link
+                    href="/themes"
+                    className="block w-full text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:opacity-90 font-medium transition-opacity"
+                  >
+                    Browse & Preview Themes
+                  </Link>
+                  <button className="w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors">
+                    Upgrade to Pro
+                  </button>
+                </div>
               </div>
             )}
 
             {activeTab === 'content' && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Headline
-                  </label>
-                  <input
-                    type="text"
-                    defaultValue={site.content?.headline || ''}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Your headline"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Bio
-                  </label>
-                  <textarea
-                    defaultValue={site.content?.bio || ''}
-                    rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tell your story..."
-                  />
-                </div>
-                <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors">
-                  Save Changes
-                </button>
-              </div>
+              <ContentEditor site={site} onUpdate={fetchData} />
             )}
 
             {activeTab === 'analytics' && (
