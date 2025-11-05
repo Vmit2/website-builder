@@ -37,13 +37,24 @@ export default function Header() {
     setIsSubdomain(isOnSubdomain);
   }, []);
 
+  // Re-check auth when pathname changes (e.g., after navigation)
+  useEffect(() => {
+    checkAuth();
+  }, [pathname]);
+
   // Close popovers when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (authPopoverRef.current && !authPopoverRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      
+      if (authPopoverRef.current && !authPopoverRef.current.contains(target)) {
         setShowAuthPopover(false);
       }
-      if (userPopoverRef.current && !userPopoverRef.current.contains(event.target as Node)) {
+      
+      // Close user popover on click outside (hover behavior is handled separately)
+      if (userPopoverRef.current && !userPopoverRef.current.contains(target)) {
+        // Only close if not hovering (to allow hover to work)
+        // We check if the mouse is actually outside by checking if the target is not within the popover
         setShowUserPopover(false);
       }
     };
@@ -54,15 +65,22 @@ export default function Header() {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch('/api/auth/me');
+      const response = await fetch('/api/auth/me', {
+        credentials: 'include', // Ensure cookies are sent
+      });
       if (response.ok) {
         const data = await response.json();
         if (data.user) {
           setUser(data.user);
+        } else {
+          setUser(null);
         }
+      } else {
+        setUser(null);
       }
     } catch (error) {
       console.error('Auth check failed:', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -81,16 +99,26 @@ export default function Header() {
           email: loginEmail,
           password: loginPassword,
         }),
+        credentials: 'include', // Ensure cookies are sent
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Update user state
+        // Wait a bit for cookie to be set, then fetch user data
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Refresh user data from server
+        await checkAuth();
+        
+        // Update user state from response
         setUser(data.user);
         setShowAuthPopover(false);
         setLoginEmail('');
         setLoginPassword('');
+        setLoginError('');
+        
+        // Refresh the page to ensure all components get updated auth state
         router.refresh();
       } else {
         setLoginError(data.error || 'Login failed. Please try again.');
@@ -105,7 +133,10 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', { method: 'POST' });
+      const response = await fetch('/api/auth/logout', { 
+        method: 'POST',
+        credentials: 'include',
+      });
       if (response.ok) {
         setUser(null);
         setShowUserPopover(false);
@@ -114,6 +145,9 @@ export default function Header() {
       }
     } catch (error) {
       console.error('Logout failed:', error);
+      // Still clear local state even if request fails
+      setUser(null);
+      setShowUserPopover(false);
     }
   };
 
@@ -122,7 +156,11 @@ export default function Header() {
     return null;
   }
 
-  const displayName = user?.fullName || user?.username || user?.email?.split('@')[0] || 'User';
+  // Get display name with proper fallback
+  const displayName = user?.fullName 
+    || user?.username 
+    || (user?.email ? user.email.split('@')[0] : null)
+    || 'User';
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-gray-200 dark:border-gray-800">
@@ -135,9 +173,16 @@ export default function Header() {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <img 
-                src="/solvex_logo.png" 
+                src="/solvexx_logo.png" 
                 alt="At-Solvexx Logo" 
                 className="h-8 w-auto object-contain"
+                onError={(e) => {
+                  // Fallback if solvexx_logo.png doesn't exist, try solvex_logo.png
+                  const target = e.target as HTMLImageElement;
+                  if (target.src && !target.src.includes('solvex_logo.png')) {
+                    target.src = '/solvex_logo.png';
+                  }
+                }}
               />
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 At-Solvexx
@@ -171,47 +216,60 @@ export default function Header() {
               <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
             ) : user ? (
               // Logged in: User icon with popover
-              <div className="relative" ref={userPopoverRef}>
+              <div 
+                className="relative" 
+                ref={userPopoverRef}
+                onMouseEnter={() => setShowUserPopover(true)}
+                onMouseLeave={() => setShowUserPopover(false)}
+              >
                 <button
                   onClick={() => setShowUserPopover(!showUserPopover)}
-                  onMouseEnter={() => setShowUserPopover(true)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  aria-label="User menu"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-medium">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-medium text-sm">
                     {displayName.charAt(0).toUpperCase()}
                   </div>
-                  <span className="hidden sm:inline text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <span className="hidden sm:inline text-sm font-medium text-gray-700 dark:text-gray-300 max-w-[150px] truncate">
                     {displayName}
                   </span>
                 </button>
 
                 {/* User Popover */}
                 {showUserPopover && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                  <div 
+                    className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
+                    onMouseEnter={() => setShowUserPopover(true)}
+                    onMouseLeave={() => setShowUserPopover(false)}
+                  >
                     <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                         {displayName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
                         {user.email}
                       </p>
                     </div>
                     <button
                       onClick={() => {
-                        router.push(`/${user.username}/dashboard`);
+                        if (user.username) {
+                          router.push(`/${user.username}/dashboard`);
+                        } else {
+                          router.push('/');
+                        }
                         setShowUserPopover(false);
                       }}
                       className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
                     >
                       <LayoutDashboard className="w-4 h-4" />
-                      Dashboard
+                      Go to Dashboard
                     </button>
                     <button
                       onClick={handleLogout}
                       className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
-                      Logout
+                      Sign Out
                     </button>
                   </div>
                 )}

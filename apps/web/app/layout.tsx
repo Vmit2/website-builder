@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   title: "At-Solvexx",
   description: "Create your own website in minutes",
   icons: {
-    icon: '/solvex_logo.png',
-    apple: '/solvex_logo.png',
+    icon: '/solvexx_logo.png',
+    apple: '/solvexx_logo.png',
   },
 };
 

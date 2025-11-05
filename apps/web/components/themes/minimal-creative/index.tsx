@@ -101,7 +101,7 @@ export default function MinimalCreative({
       </nav>
 
       {/* Hero Section */}
-      <section className="px-8 py-20">
+      <section className="px-8 py-20" style={{ backgroundColor: palette.background }}>
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -152,7 +152,14 @@ export default function MinimalCreative({
       </section>
 
       {/* About Section */}
-      <section className="px-8 py-20" style={{ backgroundColor: `${palette.background}dd` }}>
+      <section 
+        className="px-8 py-20 relative" 
+        style={{ 
+          backgroundColor: palette.secondary ? `${palette.secondary}08` : `${palette.background}dd`,
+          borderTop: `3px solid ${palette.secondary || palette.primary || '#000000'}40`,
+          borderBottom: `3px solid ${palette.secondary || palette.primary || '#000000'}40`,
+        }}
+      >
         <div className="max-w-6xl mx-auto">
           <EditableText
             id="about-title"
@@ -178,7 +185,14 @@ export default function MinimalCreative({
       </section>
 
       {/* Services Section */}
-      <section className="px-8 py-20">
+      <section 
+        className="px-8 py-20 relative" 
+        style={{ 
+          backgroundColor: palette.background,
+          borderTop: `3px solid ${palette.secondary || palette.primary || '#000000'}40`,
+          borderBottom: `3px solid ${palette.secondary || palette.primary || '#000000'}40`,
+        }}
+      >
         <div className="max-w-6xl mx-auto">
           <EditableText
             id="services-title"
@@ -264,7 +278,14 @@ export default function MinimalCreative({
       </section>
 
       {/* Contact Section */}
-      <section className="px-8 py-20" style={{ backgroundColor: `${palette.background}dd` }}>
+      <section 
+        className="px-8 py-20 relative" 
+        style={{ 
+          backgroundColor: palette.accent ? `${palette.accent}08` : `${palette.background}dd`,
+          borderTop: `3px solid ${palette.secondary || palette.primary || '#000000'}40`,
+          borderBottom: `3px solid ${palette.secondary || palette.primary || '#000000'}40`,
+        }}
+      >
         <div className="max-w-6xl mx-auto text-center">
           <EditableText
             id="contact-title"

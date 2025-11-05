@@ -54,6 +54,7 @@ function PreviewContent({ themeId }: { themeId: string }) {
   const [designSettings, setDesignSettings] = useState({
     font: 'Poppins',
     palette: '',
+    paletteData: null as any,
     logo: null as string | null,
     seoTitle: '',
     seoDescription: '',
@@ -144,9 +145,10 @@ function PreviewContent({ themeId }: { themeId: string }) {
         if (res.ok) {
           const data = await res.json();
           if (data.success && data.settings) {
-            setDesignSettings({
+              setDesignSettings({
               font: data.settings.font_family || 'Poppins',
               palette: data.settings.color_palette?.id || '',
+              paletteData: data.settings.color_palette || null,
               logo: data.settings.logo_url || null,
               seoTitle: data.settings.seo_title || '',
               seoDescription: data.settings.seo_description || '',
@@ -180,7 +182,7 @@ function PreviewContent({ themeId }: { themeId: string }) {
         body: JSON.stringify({
           siteId,
           fontFamily: newSettings.font,
-          colorPalette: newSettings.palette ? { id: newSettings.palette } : undefined,
+          colorPalette: newSettings.palette ? { id: newSettings.palette, ...newSettings.paletteData } : undefined,
           logoUrl: newSettings.logo,
           seoTitle: newSettings.seoTitle,
           seoDescription: newSettings.seoDescription,
@@ -442,7 +444,12 @@ function PreviewContent({ themeId }: { themeId: string }) {
   }
 
   // Convert palette ID to actual color values
-  const getPaletteColors = (paletteId: string) => {
+  const getPaletteColors = (paletteId: string, paletteData?: any) => {
+    // Handle custom palette
+    if (paletteId === 'custom-palette' && paletteData?.colors) {
+      return paletteData.colors;
+    }
+
     const COLOR_PALETTES = {
       solid: [
         { id: 'cool-blues', name: 'Cool Blues', colors: ['#0066CC', '#0099FF', '#00CCFF', '#00FFFF', '#0033CC'] },
@@ -471,7 +478,7 @@ function PreviewContent({ themeId }: { themeId: string }) {
 
   // Get palette colors from design settings or fallback to theme default
   const appliedPalette = designSettings.palette 
-    ? (getPaletteColors(designSettings.palette) || {
+    ? (getPaletteColors(designSettings.palette, designSettings.paletteData) || {
         primary: '#000000',
         secondary: '#666666',
         accent: '#0066cc',
@@ -565,7 +572,7 @@ function PreviewContent({ themeId }: { themeId: string }) {
           seoTitle={designSettings.seoTitle}
           seoDescription={designSettings.seoDescription}
           onFontChange={(font) => saveDesignSettings({ font })}
-          onPaletteChange={(palette, colors) => saveDesignSettings({ palette })}
+          onPaletteChange={(palette, colors) => saveDesignSettings({ palette, paletteData: colors })}
           onLogoChange={(logo) => saveDesignSettings({ logo })}
           onSeoUpdate={(title, description) => saveDesignSettings({ seoTitle: title, seoDescription: description })}
         />

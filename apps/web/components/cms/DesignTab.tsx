@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Image as ImageIcon, Check } from 'lucide-react';
+import { Image as ImageIcon, Check, Plus, X } from 'lucide-react';
 
 const GOOGLE_FONTS = [
   { name: 'Poppins', family: 'Poppins' },
@@ -36,6 +36,14 @@ interface DesignTabProps {
   onLogoChange?: (logoUrl: string) => void;
 }
 
+interface CustomPalette {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+}
+
 export default function DesignTab({
   userPlan,
   currentFont = 'Poppins',
@@ -47,6 +55,14 @@ export default function DesignTab({
 }: DesignTabProps) {
   const [selectedFont, setSelectedFont] = useState(currentFont);
   const [selectedPalette, setSelectedPalette] = useState(currentPalette);
+  const [showCustomPalette, setShowCustomPalette] = useState(false);
+  const [customPalette, setCustomPalette] = useState<CustomPalette>({
+    primary: '#000000',
+    secondary: '#666666',
+    accent: '#0066cc',
+    background: '#ffffff',
+    text: '#333333',
+  });
 
   // Sync state with props when they change
   useEffect(() => {
@@ -135,6 +151,172 @@ export default function DesignTab({
               <div className="w-full h-12 rounded" style={{ background: palette.gradient }} />
             </button>
           ))}
+
+          {/* Custom Palette (Pro only) */}
+          {userPlan === 'pro' && (
+            <div className="mt-4">
+              <button
+                onClick={() => setShowCustomPalette(!showCustomPalette)}
+                className="w-full p-3 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-500 transition-all text-left"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Plus className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Create Custom Palette
+                    </span>
+                  </div>
+                  {showCustomPalette && <X className="w-4 h-4 text-gray-500" />}
+                </div>
+              </button>
+
+              {showCustomPalette && (
+                <div className="mt-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Primary
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={customPalette.primary}
+                          onChange={(e) => setCustomPalette({ ...customPalette, primary: e.target.value })}
+                          className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={customPalette.primary}
+                          onChange={(e) => setCustomPalette({ ...customPalette, primary: e.target.value })}
+                          className="flex-1 px-2 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          placeholder="#000000"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Secondary
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={customPalette.secondary}
+                          onChange={(e) => setCustomPalette({ ...customPalette, secondary: e.target.value })}
+                          className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={customPalette.secondary}
+                          onChange={(e) => setCustomPalette({ ...customPalette, secondary: e.target.value })}
+                          className="flex-1 px-2 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          placeholder="#666666"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Accent
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={customPalette.accent}
+                          onChange={(e) => setCustomPalette({ ...customPalette, accent: e.target.value })}
+                          className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={customPalette.accent}
+                          onChange={(e) => setCustomPalette({ ...customPalette, accent: e.target.value })}
+                          className="flex-1 px-2 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          placeholder="#0066cc"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Background
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={customPalette.background}
+                          onChange={(e) => setCustomPalette({ ...customPalette, background: e.target.value })}
+                          className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={customPalette.background}
+                          onChange={(e) => setCustomPalette({ ...customPalette, background: e.target.value })}
+                          className="flex-1 px-2 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          placeholder="#ffffff"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-span-2">
+                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Text
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={customPalette.text}
+                          onChange={(e) => setCustomPalette({ ...customPalette, text: e.target.value })}
+                          className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={customPalette.text}
+                          onChange={(e) => setCustomPalette({ ...customPalette, text: e.target.value })}
+                          className="flex-1 px-2 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          placeholder="#333333"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      onClick={() => {
+                        const customId = 'custom-palette';
+                        onPaletteChange?.(customId, { type: 'custom', colors: customPalette });
+                        setSelectedPalette(customId);
+                      }}
+                      className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Apply Custom Palette
+                    </button>
+                    <button
+                      onClick={() => setShowCustomPalette(false)}
+                      className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+
+                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Preview your custom colors:
+                    </p>
+                    <div className="flex gap-1 mt-2">
+                      {Object.values(customPalette).map((color, idx) => (
+                        <div
+                          key={idx}
+                          className="w-8 h-8 rounded border border-gray-300"
+                          style={{ backgroundColor: color }}
+                          title={color}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
